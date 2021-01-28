@@ -24,17 +24,45 @@ class BankAccountTest {
 
     @Test
     void isEmailValidTest(){
-        //Positive Case
-        assertTrue(BankAccount.isEmailValid("a@b.com"));
+        //Valid Minimum Length Case
+        assertTrue(BankAccount.isEmailValid("a@b.cc"));
+       
 
         //Invalid Length Cases
         assertFalse(BankAccount.isEmailValid(""));
         assertFalse(BankAccount.isEmailValid("a@.com"));
         assertFalse(BankAccount.isEmailValid("@.com"));
 
+        //Invalid Duplicates in both areas
+        assertFalse(BankAccount.isEmailValid("..@@..@@"));
+        assertFalse(BankAccount.isEmailValid(".@.@.@.@"));
+
         //Invalid Top-Level Domain Cases
+        assertFalse(BankAccount.isEmailValid("a@b.b"));
         assertFalse(BankAccount.isEmailValid("a@b.comm"));
         assertFalse(BankAccount.isEmailValid("a@b.123"));
+
+        //Invalid Domain Cases
+        assertFalse(BankAccount.isEmailValid("a@te#st.com"));
+        assertFalse(BankAccount.isEmailValid("a.b@test"));
+        assertFalse(BankAccount.isEmailValid("a@test..com"));
+
+        //Valid Domain Cases w/ Special Characters
+        assertTrue(BankAccount.isEmailValid("abc@te_st.com"));
+        assertTrue(BankAccount.isEmailValid("abc@te-st.com"));
+
+        //Invalid Email Usernames
+        assertFalse(BankAccount.isEmailValid("c-@test.com"));
+        assertFalse(BankAccount.isEmailValid("c_@test.com"));
+        assertFalse(BankAccount.isEmailValid(".abc@m.com"));
+        assertFalse(BankAccount.isEmailValid("@abc@m.com"));
+        assertFalse(BankAccount.isEmailValid("ab#cd@m.com"));
+
+        //Valid Email Usernames
+        assertTrue(BankAccount.isEmailValid("abc123@test.com"));
+        assertTrue(BankAccount.isEmailValid("ab-cd@test.com"));
+        assertTrue(BankAccount.isEmailValid("ab_cd@test.com"));
+        assertTrue(BankAccount.isEmailValid("ab.cd@test.com"));
     }
     //Where the domain side of the @ is completely missing
     //Where the .com (or similar) is two letters or less
