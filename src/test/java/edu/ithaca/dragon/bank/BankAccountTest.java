@@ -24,11 +24,16 @@ class BankAccountTest {
 
     @Test
     void isEmailValidTest(){
+        //Positive Case
         assertTrue(BankAccount.isEmailValid("a@b.com"));
+
+        //Invalid Length Cases
         assertFalse(BankAccount.isEmailValid(""));
         assertFalse(BankAccount.isEmailValid("a@.com"));
-        assertFalse(BankAccount.isEmailValid("a@b.comm"));
         assertFalse(BankAccount.isEmailValid("@.com"));
+
+        //Invalid Top-Level Domain Cases
+        assertFalse(BankAccount.isEmailValid("a@b.comm"));
         assertFalse(BankAccount.isEmailValid("a@b.123"));
     }
 
