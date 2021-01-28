@@ -40,37 +40,67 @@ public class BankAccount {
 
 
     public static boolean isEmailValid(String email){
-        if (email.indexOf('@') == -1){
+        if ((email.indexOf('@') == -1) || (email.indexOf('.') == -1)){
             return false;
         }
         String[] splitEmail = email.split("@");
         String[] prefix = splitEmail[0].split("(?!^)");
         String[] domain = splitEmail[1].split("(?!^)");
 
-        String[] validChar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("(?!^)");
-        String[] validSymbolPrefix = "_.-".split("(?!^)");
-        String[] validSymbolDomain = "-".split("(?!^)");
-        String validWholePrefix = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-";
-        for (int x = 0; x < prefix.length; x++){
-            if (!(validWholePrefix.contains(prefix[x]))){
-                return false;
-            }
-            for (int y = 0; y < validSymbolPrefix.length; y++){
-                if (prefix[0].equals(validSymbolPrefix[y]) == true){
-                    return false;
-                }
-                if (prefix[prefix.length - 1].equals(validSymbolPrefix[y]) == true){
-                    return false;
-                }
-                if (prefix[x].equals(validSymbolPrefix[y]) == true){
-                    if (prefix[x+1].equals(validSymbolPrefix[y]) == true){
-                        return false;
-                    }
-                }
-            }
+        if (prefix.length == 0){
+            return false;
+        }
+        if (domain.length == 0){
+            return false;
         }
 
+        //prefix
+        String prefixValidChar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String prefixValidNum = "0123456789";
+        String prefixValidSym = "_.-";
+        
+        for (int i = 0; i < prefix.length; i++){
+            if (!((prefixValidChar.contains(prefix[i])) || (prefixValidNum.contains(prefix[i])) || (prefixValidSym.contains(prefix[i])))){
+                return false;
+            }
+        }
+        if (!((prefixValidChar.contains(prefix[0])) || (prefixValidNum.contains(prefix[0])))){
+            return false;
+        }
+        if (!((prefixValidChar.contains(prefix[prefix.length - 1])) || (prefixValidNum.contains(prefix[prefix.length - 1])))){
+            return false;
+        }
+        for (int i = 0; i < prefix.length; i++){
+            if ((prefixValidSym.contains(prefix[i])) && (prefixValidSym.contains(prefix[i + 1]))){
+                return false;
+            }
+        }
+        
+        //domain
+        String domainValidChar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String domainValidNum = "0123456789";
+        String domainValidSym = ".-";
 
+        int periodCount = 0;
+        for (int i = 0; i < domain.length; i++){
+            if (!((domainValidChar.contains(domain[i])) || (domainValidNum.contains(domain[i])) || (domainValidSym.contains(domain[i])))){
+                return false;
+            }
+            if (domain[i].equals(".")){
+                periodCount++;
+            }
+        }
+        if (periodCount != 1){
+            return false;
+        }
+        
+        String[] splitDomain = splitEmail[1].split("\\.");
+        String[] TLD = splitDomain[1].split("(?!^)");
+        if (TLD.length < 2){
+            return false;
+        }
+
+        return true;
     }
 
 }
