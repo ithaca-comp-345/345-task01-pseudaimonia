@@ -64,6 +64,7 @@ class BankAccountTest {
         assertTrue(BankAccount.isEmailValid("ab_cd@test.com"));
         assertTrue(BankAccount.isEmailValid("ab.cd@test.com"));
     }
+    //I addressed the comments below
     //Where the domain side of the @ is completely missing
     //Where the .com (or similar) is two letters or less
 
