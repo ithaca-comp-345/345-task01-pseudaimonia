@@ -43,8 +43,34 @@ public class BankAccount {
         if (email.indexOf('@') == -1){
             return false;
         }
-        else {
-            return true;
+        String[] splitEmail = email.split("@");
+        String[] prefix = splitEmail[0].split("(?!^)");
+        String[] domain = splitEmail[1].split("(?!^)");
+
+        String[] validChar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("(?!^)");
+        String[] validSymbolPrefix = "_.-".split("(?!^)");
+        String[] validSymbolDomain = "-".split("(?!^)");
+        String validWholePrefix = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-";
+        for (int x = 0; x < prefix.length; x++){
+            if (!(validWholePrefix.contains(prefix[x]))){
+                return false;
+            }
+            for (int y = 0; y < validSymbolPrefix.length; y++){
+                if (prefix[0].equals(validSymbolPrefix[y]) == true){
+                    return false;
+                }
+                if (prefix[prefix.length - 1].equals(validSymbolPrefix[y]) == true){
+                    return false;
+                }
+                if (prefix[x].equals(validSymbolPrefix[y]) == true){
+                    if (prefix[x+1].equals(validSymbolPrefix[y]) == true){
+                        return false;
+                    }
+                }
+            }
         }
+
+
     }
+
 }
