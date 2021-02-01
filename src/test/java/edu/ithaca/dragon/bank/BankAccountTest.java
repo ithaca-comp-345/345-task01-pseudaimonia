@@ -8,9 +8,17 @@ class BankAccountTest {
 
     @Test
     void getBalanceTest() {
-        BankAccount bankAccount = new BankAccount("a@b.com", 200);
+        //Positive Balance Case
+        BankAccount bankAccount1 = new BankAccount("a@b.com", 200);
+        assertEquals(200, bankAccount1.getBalance());
 
-        assertEquals(200, bankAccount.getBalance());
+        //Empty Balance Case
+        BankAccount bankAccount2 = new BankAccount("a@b.com", 0);
+        assertEquals(0, bankAccount2.getBalance());
+
+        //Negative Balance Case
+        BankAccount bankAccount3 = new BankAccount("a@b.com", -10);
+        assertEquals(-10, bankAccount3.getBalance());
     }
 
     @Test
@@ -20,6 +28,20 @@ class BankAccountTest {
 
         assertEquals(100, bankAccount.getBalance());
         assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
+
+        BankAccount bankAccount1 = new BankAccount("a@b.com", 0);
+        bankAccount1.withdraw(-10);
+        assertEquals(0, bankAccount1.getBalance());
+        assertThrows(InsufficientFundsException.class, () -> bankAccount1.withdraw(10));
+
+        BankAccount bankAccount2 = new BankAccount("a@b.com", -5);
+        bankAccount2.withdraw(-10);
+        assertEquals(-5, bankAccount2.getBalance());
+        assertThrows(InsufficientFundsException.class, () -> bankAccount2.withdraw(1));
+        assertThrows(InsufficientFundsException.class, () -> bankAccount2.withdraw(-1));
+        assertThrows(InsufficientFundsException.class, () -> bankAccount2.withdraw(0));
+
+
     }
 
     @Test
