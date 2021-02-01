@@ -11,11 +11,22 @@ public class BankAccount {
     public BankAccount(String email, double startingBalance){
         if (isEmailValid(email)){
             this.email = email;
+            startingBalance = reduceToTwoDecimalPlaces(startingBalance);
             this.balance = startingBalance;
         }
         else {
             throw new IllegalArgumentException("Email address: " + email + " is invalid, cannot create account");
         }
+    }
+
+    public double reduceToTwoDecimalPlaces(double amount){
+        String strAmount = Double.toString(amount);
+        String[] strAmountDigits = strAmount.split("\\.");
+        if(strAmountDigits[1].length()>2){
+            strAmount = strAmountDigits[0]+"."+strAmountDigits[1].substring(0,2);
+            amount = Double.parseDouble(strAmount);
+        }
+        return amount;
     }
 
     public double getBalance(){
@@ -29,14 +40,18 @@ public class BankAccount {
     /**
      * @post reduces the balance by amount if amount is non-negative and smaller than balance
      */
-    public void withdraw (double amount) throws InsufficientFundsException{
-        if (amount <= balance){
+    public void withdraw (double amount) throws Exception{
+        amount = reduceToTwoDecimalPlaces(amount);
+        if(amount<=0){
+            throw new Exception("Invalid withdraw amount");
+        }
+        else if (amount <= balance){
             balance -= amount;
         }
         else {
             throw new InsufficientFundsException("Not enough money");
         }
-    }
+    }  
 
 
     public static boolean isEmailValid(String email){

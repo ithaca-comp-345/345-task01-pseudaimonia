@@ -19,27 +19,32 @@ class BankAccountTest {
         //Negative Balance Case
         BankAccount bankAccount3 = new BankAccount("a@b.com", -10);
         assertEquals(-10, bankAccount3.getBalance());
+
+        //Positive Balance Case
+        BankAccount bankAccount4 = new BankAccount("a@b.com", 200.58);
+        assertEquals(200.58, bankAccount4.getBalance());
     }
 
     @Test
-    void withdrawTest() throws InsufficientFundsException{
+    void withdrawTest() throws Exception{
         BankAccount bankAccount = new BankAccount("a@b.com", 200);
         bankAccount.withdraw(100);
-
         assertEquals(100, bankAccount.getBalance());
-        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
+        bankAccount.withdraw(10.501);
+        assertEquals(89.50, bankAccount.getBalance());
+        assertThrows(Exception.class, () -> bankAccount.withdraw(300));
 
         BankAccount bankAccount1 = new BankAccount("a@b.com", 0);
-        bankAccount1.withdraw(-10);
+        assertThrows(Exception.class, () -> bankAccount1.withdraw(-10));
         assertEquals(0, bankAccount1.getBalance());
-        assertThrows(InsufficientFundsException.class, () -> bankAccount1.withdraw(10));
+        assertThrows(Exception.class, () -> bankAccount1.withdraw(10));
 
         BankAccount bankAccount2 = new BankAccount("a@b.com", -5);
-        bankAccount2.withdraw(-10);
+        assertThrows(Exception.class, () -> bankAccount2.withdraw(-10));
         assertEquals(-5, bankAccount2.getBalance());
-        assertThrows(InsufficientFundsException.class, () -> bankAccount2.withdraw(1));
-        assertThrows(InsufficientFundsException.class, () -> bankAccount2.withdraw(-1));
-        assertThrows(InsufficientFundsException.class, () -> bankAccount2.withdraw(0));
+        assertThrows(Exception.class, () -> bankAccount2.withdraw(1));
+        assertThrows(Exception.class, () -> bankAccount2.withdraw(-1));
+        assertThrows(Exception.class, () -> bankAccount2.withdraw(0));
 
 
     }
@@ -78,6 +83,7 @@ class BankAccountTest {
         assertFalse(BankAccount.isEmailValid("ab#cd@m.com"));
 
         //Valid Email Usernames
+        assertTrue(BankAccount.isEmailValid("a@b.com"));
         assertTrue(BankAccount.isEmailValid("abc123@test.com"));
         assertTrue(BankAccount.isEmailValid("ab-cd@test.com"));
         assertTrue(BankAccount.isEmailValid("ab_cd@test.com"));
