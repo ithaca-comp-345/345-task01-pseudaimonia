@@ -43,14 +43,17 @@ public class BankAccount {
         if ((email.indexOf('@') == -1) || (email.indexOf('.') == -1)){
             return false;
         }
+        if ((email.indexOf('@')) != email.lastIndexOf('@')){
+            return false;
+        }
+
         String[] splitEmail = email.split("@");
         String[] prefix = splitEmail[0].split("(?!^)");
         String[] domain = splitEmail[1].split("(?!^)");
-
-        if (prefix.length == 0){
+        if (prefix.length <= 1){
             return false;
         }
-        if (domain.length == 0){
+        if (domain.length <= 1){
             return false;
         }
 
@@ -79,8 +82,8 @@ public class BankAccount {
         //domain
         String domainValidChar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String domainValidNum = "0123456789";
-        String domainValidSym = ".-";
-
+        String domainValidSym = "_.-";
+        
         int periodCount = 0;
         for (int i = 0; i < domain.length; i++){
             if (!((domainValidChar.contains(domain[i])) || (domainValidNum.contains(domain[i])) || (domainValidSym.contains(domain[i])))){
@@ -95,7 +98,11 @@ public class BankAccount {
         }
         
         String[] splitDomain = splitEmail[1].split("\\.");
+        String[] host = splitDomain[0].split("(?!^)");
         String[] TLD = splitDomain[1].split("(?!^)");
+        if (host.length <= 1){
+            return false;
+        }
         if (TLD.length < 2){
             return false;
         }
