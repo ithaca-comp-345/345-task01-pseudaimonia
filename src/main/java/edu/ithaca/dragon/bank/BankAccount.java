@@ -90,9 +90,11 @@ public class BankAccount {
             else{balance += amount;}
         }
     }
-
+    /**
+     * @post increases the account parameter's balance by the amount withdrawn from the current balance
+     */
     public void transfer (BankAccount recipient, double amount) throws Exception{
-        if(this!=recipient){
+        if(this!=recipient || recipient != null){
             if(isAmountValid(amount)){
                 this.withdraw(amount);
                 recipient.deposit(amount);

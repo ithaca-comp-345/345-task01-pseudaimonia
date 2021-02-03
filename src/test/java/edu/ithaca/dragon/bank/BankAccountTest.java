@@ -77,6 +77,10 @@ class BankAccountTest {
         //transferer and recipient are the same account
         assertThrows(IllegalArgumentException.class, () -> lender.transfer(lender,100));
 
+        //recipient is null
+        assertThrows(IllegalArgumentException.class, () -> lender.transfer(null,100));
+
+
         //invalid amounts
         assertThrows(InsufficientFundsException.class, () -> lender.transfer(recipient,1500));
         assertEquals(0,recipient.getBalance());
