@@ -50,8 +50,8 @@ class BankAccountTest {
         assertEquals(300,bankAccount.getBalance());
         bankAccount.deposit(0.1);
         assertEquals(300.1,bankAccount.getBalance());
-        bankAccount.deposit(0.05);
-        assertEquals(300.15,bankAccount.getBalance());
+        bankAccount.deposit(0.01);
+        assertEquals(300.11,bankAccount.getBalance());
 
         //deposit of zero
         BankAccount bankAccount1 = new BankAccount("a@b.com", 0);
@@ -78,7 +78,7 @@ class BankAccountTest {
         assertThrows(IllegalArgumentException.class, () -> lender.transfer(lender,100));
 
         //invalid amounts
-        assertThrows(IllegalArgumentException.class, () -> lender.transfer(recipient,1500));
+        assertThrows(InsufficientFundsException.class, () -> lender.transfer(recipient,1500));
         assertEquals(0,recipient.getBalance());
         assertEquals(1000,lender.getBalance());
         assertThrows(IllegalArgumentException.class, () -> lender.transfer(recipient,10.501));

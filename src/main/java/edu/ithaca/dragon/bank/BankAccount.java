@@ -61,19 +61,49 @@ public class BankAccount {
             throw new IllegalArgumentException("Invalid withdraw amount");
         }
         else if (amount <= balance){
-            balance -= amount;
+            if(amount<0.1){
+                double temp = balance*100;
+                amount*=100;
+                temp-=(int)amount;
+                balance = temp/100.0;
+            }
+            else{balance -= amount;}
         }
         else {
             throw new InsufficientFundsException("Not enough money");
         }
     }  
-
-    public void deposit (double amount) throws Exception{
-        //TODO
+    /**
+     * @post increases the balance by the amount if amount is non-negative and smaller than balance
+     */
+    public void deposit (double amount) throws IllegalArgumentException{
+        if(!isAmountValid(amount)){
+            throw new IllegalArgumentException("Invalid deposit amount");
+        }
+        else{
+            if(amount<0.1){
+                double temp = balance*100/1;
+                amount*=100;
+                temp+=(int)amount;
+                balance = temp/100.0;
+            }
+            else{balance += amount;}
+        }
     }
 
     public void transfer (BankAccount recipient, double amount) throws Exception{
-        //TODO
+        if(this!=recipient){
+            if(isAmountValid(amount)){
+                this.withdraw(amount);
+                recipient.deposit(amount);
+            }
+            else{
+                throw new IllegalArgumentException("Invalid transfer amount");
+            }
+        }
+        else{
+            throw new IllegalArgumentException("Amount may not be transferred to and from the same account");
+        }
     }
 
     public static boolean isEmailValid(String email){
