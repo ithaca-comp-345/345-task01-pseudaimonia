@@ -51,6 +51,9 @@ class BankAccountTest {
 
     @Test
     void isEmailValidTest(){
+        
+        //Minimum length test
+        assertTrue(BankAccount.isEmailValid("a@b.com"));
 
         //Invalid Length Cases
         assertFalse(BankAccount.isEmailValid(""));

@@ -55,20 +55,99 @@ public class BankAccount {
 
 
     public static boolean isEmailValid(String email){
+        email = email.toLowerCase();
+        //minimum required length
+        if (email.length() < 6){
+            return false;
+        }
+        //if email does not contain @ or period
+        if ((email.indexOf('@') == -1) || (email.indexOf('.') == -1)){
+            return false;
+        }
+        //if email contains multiple @
+        if ((email.indexOf('@')) != email.lastIndexOf('@')){
+            return false;
+        }
+        //if first character is an underscore, period, dash, or @
+        if ((email.indexOf('_') == 0) || (email.indexOf('.') == 0) || (email.indexOf('-') == 0) || (email.indexOf('@') == 0)){
+            return false;
+        }
+        //if period is right after @
+        if (email.indexOf('@') == (email.indexOf('.') - 1)){
+            return false;
+        }
+        else {
+            //PREFIX
+            String[] splitEmail = email.split("@");
+            String prefix = splitEmail[0];
+
+            //check for unfollowed punctuation
+            if ((prefix.charAt(prefix.length() - 1) == 45) || (prefix.charAt(prefix.length() - 1) == 46) || (prefix.charAt(prefix.length() - 1) == 95)){
+                return false;
+            }
+            for (int i = 0; i < prefix.length(); i++){
+                //check for invalid characters in prefix
+                if ((prefix.charAt(i) != 45) && (prefix.charAt(i) != 46) && (prefix.charAt(i) != 95) && 
+                (!((prefix.charAt(i) >= 97) && (prefix.charAt(i) <= 122))) && (!((prefix.charAt(i) >= 47) && (prefix.charAt(i) <= 57)))){
+                    return false;
+                }
+                //check for sequential punctuation
+                if ((prefix.charAt(i) == 45) || (prefix.charAt(i) == 46) || (prefix.charAt(i) == 95)){
+                    if ((prefix.charAt(i-1) == 45) || (prefix.charAt(i-1) == 46) || (prefix.charAt(i-1) == 95)){
+                        return false;
+                    }
+                }
+            }
+
+            //DOMAIN
+            //checks for existence of a period in the domain
+            if (!(splitEmail[1].contains("."))){
+                return false;
+            }
+            //checks for one period in domain
+            if (splitEmail[1].indexOf(".") != splitEmail[1].lastIndexOf(".")){
+                return false;
+            }
+            String[] splitDomain = splitEmail[1].split("\\.");
+            String host = splitDomain[0];
+            System.out.println(host);
+
+            //check for invalid characters in host
+            for (int i = 0; i < host.length(); i++){
+                if ((host.charAt(i) != 45) && (host.charAt(i) != 95) && (!((host.charAt(i) >= 97) && (host.charAt(i) <= 122)))){
+                    return false;
+                }
+            }
+
+            String TLD = splitDomain[1];
+            //check for proper top-level domain
+            if (!(TLD.equals("com"))){
+                return false;
+            }
+
+            return true;
+        }
+
+
+
+        /**
         if ((email.indexOf('@') == -1) || (email.indexOf('.') == -1)){
             return false;
         }
         if ((email.indexOf('@')) != email.lastIndexOf('@')){
             return false;
         }
+        if ((email.indexOf('.')) != email.lastIndexOf('.')){
+            return false;
+        }
 
         String[] splitEmail = email.split("@");
         String[] prefix = splitEmail[0].split("(?!^)");
         String[] domain = splitEmail[1].split("(?!^)");
-        if (prefix.length <= 1){
+        if (prefix.length < 1){
             return false;
         }
-        if (domain.length <= 1){
+        if (domain.length < 1){
             return false;
         }
 
@@ -114,15 +193,21 @@ public class BankAccount {
         
         String[] splitDomain = splitEmail[1].split("\\.");
         String[] host = splitDomain[0].split("(?!^)");
+        System.out.println(host.length);
         String[] TLD = splitDomain[1].split("(?!^)");
-        if (host.length <= 1){
+        System.out.println(TLD.length);
+        if (host.length < 1){
             return false;
+        }
+        if ((host.length == 1) && (host[0].equals(" "))){
+
         }
         if (TLD.length < 2){
             return false;
         }
 
         return true;
+        */
     }
 
 }
