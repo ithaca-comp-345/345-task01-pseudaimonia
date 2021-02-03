@@ -28,16 +28,83 @@ class BankAccountTest {
         BankAccount bankAccount = new BankAccount("a@b.com", 200);
         bankAccount.withdraw(100);
         assertEquals(100, bankAccount.getBalance());
-        assertThrows(Exception.class, () -> bankAccount.withdraw(10.501));
-        assertThrows(Exception.class, () -> bankAccount.withdraw(-1));
-        assertThrows(Exception.class, () -> bankAccount.withdraw(300));
+        bankAccount.withdraw(0.50);
+        assertEquals(99.50, bankAccount.getBalance());
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(10.501));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(-1));
+        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
 
         //balance of zero - all invalid withdrawals
         BankAccount bankAccount1 = new BankAccount("a@b.com", 0);
-        assertThrows(Exception.class, () -> bankAccount1.withdraw(-10));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount1.withdraw(-10));
         assertEquals(0, bankAccount1.getBalance());
-        assertThrows(Exception.class, () -> bankAccount1.withdraw(1));
+        assertThrows(InsufficientFundsException.class, () -> bankAccount1.withdraw(1));
         assertEquals(0, bankAccount1.getBalance());
+    }
+
+    @Test 
+    void depositTest() throws Exception{
+        //positive deposit (all valid digits)
+        BankAccount bankAccount = new BankAccount("a@b.com", 200);
+        bankAccount.deposit(100);
+        assertEquals(300,bankAccount.getBalance());
+        bankAccount.deposit(0.1);
+        assertEquals(300.1,bankAccount.getBalance());
+        bankAccount.deposit(0.05);
+        assertEquals(300.15,bankAccount.getBalance());
+
+        //deposit of zero
+        BankAccount bankAccount1 = new BankAccount("a@b.com", 0);
+        bankAccount1.deposit(100);
+        assertEquals(100,bankAccount1.getBalance());
+        bankAccount1.deposit(0.1);
+        assertEquals(100.1,bankAccount1.getBalance());
+        bankAccount1.deposit(0.05);
+        assertEquals(100.15,bankAccount1.getBalance());
+
+        //invalid deposits (negative and digits)
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(-10));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(-10.1));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(-10.15));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(1.151));
+    }
+    @Test
+    void transferTest() throws Exception{
+
+        BankAccount lender = new BankAccount("a@b.com",1000);
+        BankAccount recipient = new BankAccount("ab@c.com",0);
+
+        //transferer and recipient are the same account
+        assertThrows(IllegalArgumentException.class, () -> lender.transfer(lender,100));
+
+        //invalid amounts
+        assertThrows(IllegalArgumentException.class, () -> lender.transfer(recipient,1500));
+        assertEquals(0,recipient.getBalance());
+        assertEquals(1000,lender.getBalance());
+        assertThrows(IllegalArgumentException.class, () -> lender.transfer(recipient,10.501));
+        assertEquals(0,recipient.getBalance());
+        assertEquals(1000,lender.getBalance());
+        assertThrows(IllegalArgumentException.class, () -> lender.transfer(recipient,-10));
+        assertEquals(0,recipient.getBalance());
+        assertEquals(1000,lender.getBalance());
+        assertThrows(IllegalArgumentException.class, () -> lender.transfer(recipient,-10.5));
+        assertEquals(0,recipient.getBalance());
+        assertEquals(1000,lender.getBalance());
+        assertThrows(IllegalArgumentException.class, () -> lender.transfer(recipient,-10.50));
+        assertEquals(0,recipient.getBalance());
+        assertEquals(1000,lender.getBalance());
+
+        //valid transfers
+        lender.transfer(recipient,100);
+        assertEquals(900,lender.getBalance());
+        assertEquals(100,recipient.getBalance());
+        lender.transfer(recipient,0.1);
+        assertEquals(899.9,lender.getBalance());
+        assertEquals(100.1,recipient.getBalance());
+        lender.transfer(recipient,0.05);
+        assertEquals(899.85,lender.getBalance());
+        assertEquals(100.15,recipient.getBalance());
+
     }
 
     @Test

@@ -68,6 +68,13 @@ public class BankAccount {
         }
     }  
 
+    public void deposit (double amount) throws Exception{
+        //TODO
+    }
+
+    public void transfer (BankAccount recipient, double amount) throws Exception{
+        //TODO
+    }
 
     public static boolean isEmailValid(String email){
         email = email.toLowerCase();
@@ -125,7 +132,6 @@ public class BankAccount {
             }
             String[] splitDomain = splitEmail[1].split("\\.");
             String host = splitDomain[0];
-            System.out.println(host);
 
             //check for invalid characters in host
             for (int i = 0; i < host.length(); i++){
@@ -142,87 +148,6 @@ public class BankAccount {
 
             return true;
         }
-
-
-
-        /**
-        if ((email.indexOf('@') == -1) || (email.indexOf('.') == -1)){
-            return false;
-        }
-        if ((email.indexOf('@')) != email.lastIndexOf('@')){
-            return false;
-        }
-        if ((email.indexOf('.')) != email.lastIndexOf('.')){
-            return false;
-        }
-
-        String[] splitEmail = email.split("@");
-        String[] prefix = splitEmail[0].split("(?!^)");
-        String[] domain = splitEmail[1].split("(?!^)");
-        if (prefix.length < 1){
-            return false;
-        }
-        if (domain.length < 1){
-            return false;
-        }
-
-        //prefix
-        String prefixValidChar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String prefixValidNum = "0123456789";
-        String prefixValidSym = "_.-";
-        
-        for (int i = 0; i < prefix.length; i++){
-            if (!((prefixValidChar.contains(prefix[i])) || (prefixValidNum.contains(prefix[i])) || (prefixValidSym.contains(prefix[i])))){
-                return false;
-            }
-        }
-        if (!((prefixValidChar.contains(prefix[0])) || (prefixValidNum.contains(prefix[0])))){
-            return false;
-        }
-        if (!((prefixValidChar.contains(prefix[prefix.length - 1])) || (prefixValidNum.contains(prefix[prefix.length - 1])))){
-            return false;
-        }
-        for (int i = 0; i < prefix.length; i++){
-            if ((prefixValidSym.contains(prefix[i])) && (prefixValidSym.contains(prefix[i + 1]))){
-                return false;
-            }
-        }
-        
-        //domain
-        String domainValidChar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String domainValidNum = "0123456789";
-        String domainValidSym = "_.-";
-        
-        int periodCount = 0;
-        for (int i = 0; i < domain.length; i++){
-            if (!((domainValidChar.contains(domain[i])) || (domainValidNum.contains(domain[i])) || (domainValidSym.contains(domain[i])))){
-                return false;
-            }
-            if (domain[i].equals(".")){
-                periodCount++;
-            }
-        }
-        if (periodCount != 1){
-            return false;
-        }
-        
-        String[] splitDomain = splitEmail[1].split("\\.");
-        String[] host = splitDomain[0].split("(?!^)");
-        System.out.println(host.length);
-        String[] TLD = splitDomain[1].split("(?!^)");
-        System.out.println(TLD.length);
-        if (host.length < 1){
-            return false;
-        }
-        if ((host.length == 1) && (host[0].equals(" "))){
-
-        }
-        if (TLD.length < 2){
-            return false;
-        }
-
-        return true;
-        */
     }
 
 }
