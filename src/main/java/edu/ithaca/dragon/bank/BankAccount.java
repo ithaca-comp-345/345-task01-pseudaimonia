@@ -104,7 +104,7 @@ public class BankAccount {
             }
         }
         else{
-            throw new IllegalArgumentException("Amount may not be transferred to and from the same account");
+            throw new IllegalArgumentException("Invalid recipient account");
         }
     }
 
