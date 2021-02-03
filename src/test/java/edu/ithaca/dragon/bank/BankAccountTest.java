@@ -16,44 +16,54 @@ class BankAccountTest {
         BankAccount bankAccount2 = new BankAccount("a@b.com", 0);
         assertEquals(0, bankAccount2.getBalance());
 
-        //Negative Balance Case
-        BankAccount bankAccount3 = new BankAccount("a@b.com", -10);
-        assertEquals(-10, bankAccount3.getBalance());
-
-        //Positive Balance Case
+        //Positive Balance Correct Decimal Case
         BankAccount bankAccount4 = new BankAccount("a@b.com", 200.58);
         assertEquals(200.58, bankAccount4.getBalance());
+
     }
 
     @Test
     void withdrawTest() throws Exception{
+        //positive balance - valid withdrawal and invalid withdrawals (digits)
         BankAccount bankAccount = new BankAccount("a@b.com", 200);
         bankAccount.withdraw(100);
         assertEquals(100, bankAccount.getBalance());
-        bankAccount.withdraw(10.501);
-        assertEquals(89.50, bankAccount.getBalance());
+        assertThrows(Exception.class, () -> bankAccount.withdraw(10.501));
+        assertThrows(Exception.class, () -> bankAccount.withdraw(-1));
         assertThrows(Exception.class, () -> bankAccount.withdraw(300));
 
+        //balance of zero - all invalid withdrawals
         BankAccount bankAccount1 = new BankAccount("a@b.com", 0);
         assertThrows(Exception.class, () -> bankAccount1.withdraw(-10));
         assertEquals(0, bankAccount1.getBalance());
-        assertThrows(Exception.class, () -> bankAccount1.withdraw(10));
+        assertThrows(Exception.class, () -> bankAccount1.withdraw(1));
+        assertEquals(0, bankAccount1.getBalance());
+    }
 
-        BankAccount bankAccount2 = new BankAccount("a@b.com", -5);
-        assertThrows(Exception.class, () -> bankAccount2.withdraw(-10));
-        assertEquals(-5, bankAccount2.getBalance());
-        assertThrows(Exception.class, () -> bankAccount2.withdraw(1));
-        assertThrows(Exception.class, () -> bankAccount2.withdraw(-1));
-        assertThrows(Exception.class, () -> bankAccount2.withdraw(0));
+    @Test
+    void isAmountValidTest(){
+        //negatives (with correct and incorrect digits after the decimal)
+        assertFalse(BankAccount.isAmountValid(-1));
+        assertFalse(BankAccount.isAmountValid(-1.1));
+        assertFalse(BankAccount.isAmountValid(-1.11));
+        assertFalse(BankAccount.isAmountValid(-1.111));
 
+        //Smallest number of invalid digits after the decimal
+        assertFalse(BankAccount.isAmountValid(0.666));
 
+        //Zero case
+        assertTrue(BankAccount.isAmountValid(0));
+
+        //All valid digit amounts after the decimal
+        assertTrue(BankAccount.isAmountValid(0.6));
+        assertTrue(BankAccount.isAmountValid(0.66));
+
+        //Positive case with significant number of digits
+        assertTrue(BankAccount.isAmountValid(10000));
     }
 
     @Test
     void isEmailValidTest(){
-        
-        //Minimum length test
-        assertTrue(BankAccount.isEmailValid("a@b.com"));
 
         //Invalid Length Cases
         assertFalse(BankAccount.isEmailValid(""));
@@ -104,7 +114,13 @@ class BankAccountTest {
         assertEquals("a@b.com", bankAccount.getEmail());
         assertEquals(200, bankAccount.getBalance());
         //check for exception thrown correctly
+
+        //invalid email
         assertThrows(IllegalArgumentException.class, ()-> new BankAccount("", 100));
+        //negative balance
+        assertThrows(IllegalArgumentException.class, ()-> new BankAccount("a@b.com", -100));
+        //incorrect digits
+        assertThrows(IllegalArgumentException.class, ()-> new BankAccount("a@b.com", 100.501));
     }
 
 }

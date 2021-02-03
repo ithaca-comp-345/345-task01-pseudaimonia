@@ -9,16 +9,17 @@ public class BankAccount {
      * @throws IllegalArgumentException if email is invalid
      */
     public BankAccount(String email, double startingBalance){
-        if (isEmailValid(email)){
+        if (isEmailValid(email) && isAmountValid(startingBalance)){
             this.email = email;
-            startingBalance = reduceToTwoDecimalPlaces(startingBalance);
             this.balance = startingBalance;
         }
-        else {
+        else if (!isEmailValid(email)){
             throw new IllegalArgumentException("Email address: " + email + " is invalid, cannot create account");
         }
+        else{throw new IllegalArgumentException("Invalid amount for starting balance");}
     }
-
+    //this was a helper function I wrote for the withdraw function before I realized we were going to be creating isAmountValid 
+    /*
     public double reduceToTwoDecimalPlaces(double amount){
         String strAmount = Double.toString(amount);
         String[] strAmountDigits = strAmount.split("\\.");
@@ -27,6 +28,21 @@ public class BankAccount {
             amount = Double.parseDouble(strAmount);
         }
         return amount;
+    }*/
+
+    /**
+     * returns true for positive double amounts with two digits after the decimal place
+     */
+    public static boolean isAmountValid(double amount){
+        if(amount<0){
+            return false;
+        }
+        String strAmount = Double.toString(amount);
+        String[] strAmountDigits = strAmount.split("\\.");
+        if(strAmountDigits.length>1 && strAmountDigits[1].length()>2){
+            return false;
+        }
+        return true;
     }
 
     public double getBalance(){
@@ -41,9 +57,8 @@ public class BankAccount {
      * @post reduces the balance by amount if amount is non-negative and smaller than balance
      */
     public void withdraw (double amount) throws Exception{
-        amount = reduceToTwoDecimalPlaces(amount);
-        if(amount<=0){
-            throw new Exception("Invalid withdraw amount");
+        if(!isAmountValid(amount)){
+            throw new IllegalArgumentException("Invalid withdraw amount");
         }
         else if (amount <= balance){
             balance -= amount;
